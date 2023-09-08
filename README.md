@@ -8,8 +8,7 @@ BlockBazzar is an online crypto NFT marketplace built using Truffle, npm, and Re
 2. [Prerequisites](#prerequisites)
 3. [Installation](#installation)
 4. [Usage](#usage)
-5. [Contributing](#contributing)
-6. [License](#license)
+5. [License](#license)
 
 ## Features
 
@@ -37,3 +36,19 @@ Before you begin, ensure you have met the following requirements:
 
    ```bash
    git clone https://github.com/vatsalm30/BlockBazzar.git
+2. Navigate to the project directory:
+   ```bash
+   cd BlockBazzar
+3. Install the required npm packages for the frontend and the Truffle project:
+   ```bash
+   npm install
+   cd client
+   npm install
+4. Configure your Ethereum network and wallet settings in "truffle-config.js"
+5. Migrate the smart contracts to the Ethereum network:
+   ```bash
+   truffle migrate --network yourNetworkName
+6. Start the React.js development server:
+   ```bash
+   cd client
+   npm start
