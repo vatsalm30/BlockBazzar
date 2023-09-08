@@ -36,4 +36,4 @@ Before you begin, ensure you have met the following requirements:
 1. Clone the BlockBazzar repository to your local machine:
 
    ```bash
-   git clone https://github.com/yourusername/BlockBazzar.git
+   git clone https://github.com/vatsalm30/BlockBazzar.git
