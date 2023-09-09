@@ -89,3 +89,7 @@ Before you begin, ensure you have met the following requirements:
 3. Create your NFT collections and mint NFTs.
 
 4. Browse, buy, and sell NFTs securely on the platform.
+
+## License
+
+This project is under an All Rights Reserved Liscence. See the License file for details.
