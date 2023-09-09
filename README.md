@@ -54,7 +54,7 @@ Before you begin, ensure you have met the following requirements:
    cd client
    npm start
 
-##MetaMask
+## MetaMask
 1. Run Ganache local blockchauin on port 7545
    
 2. Instal Metamask and add Ganche to it
