@@ -60,10 +60,24 @@ Before you begin, ensure you have met the following requirements:
 
 1. Run Ganache local blockchauin on port 7545
    
-2. Instal Metamask and add Ganche to it
+2. Instal Metamask on Chrome
    
-3. Steps to Add Ganache to MetaMask:
+3. Go to drop down in upper left side corner
    
+4. Enable test networks
+
+5. Scroll all the way down to add a network
+
+6. Click on add a network manually
+
+7. Set Network Name to 'Ganache'
+
+8. Set RPC URL to 'HTTP://127.0.0.1:7545'
+
+9. Set chain id to '1337'
+
+10. Set currencey symbol to 'ETH'
+
    
 ## Usage
 
