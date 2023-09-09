@@ -82,10 +82,10 @@ Before you begin, ensure you have met the following requirements:
 ## Usage
 
    
-4. Access the BlockBazzar frontend at http://localhost:3000.
+1. Access the BlockBazzar frontend at http://localhost:3000.
 
-5. Create an account and log in using your Ethereum wallet.
+2. Create an account and log in using your Ethereum wallet.
 
-6. Create your NFT collections and mint NFTs.
+3. Create your NFT collections and mint NFTs.
 
-7. Browse, buy, and sell NFTs securely on the platform.
+4. Browse, buy, and sell NFTs securely on the platform.
