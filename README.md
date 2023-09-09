@@ -1,6 +1,6 @@
 # BlockBazzar - Online Crypto NFT Marketplace
 
-BlockBazzar is an online crypto NFT marketplace built using Truffle, npm, and React.js. This platform allows users to buy, sell, and trade digital assets in the form of Non-Fungible Tokens (NFTs) securely and efficiently.
+BlockBazzar is an online crypto NFT marketplace built using Truffle, npm, and React.js. This platform allows users to buy, and sell real products, with an underling ERC-1155 NFT system for safe and secure transactions
 
 ## Table of Contents
 
@@ -13,11 +13,11 @@ BlockBazzar is an online crypto NFT marketplace built using Truffle, npm, and Re
 
 ## Features
 
-- Create and manage NFT collections.
-- Mint new NFTs.
-- Buy and sell NFTs securely.
+- Create and manage Product lines.
+- Creat new Products.
+- Buy and sell Products securely.
 - User-friendly React.js frontend.
-- Integration with Ethereum using Truffle.
+- Integration with Blockchain technology using Truffle.
 - Secure authentication and authorization.
 - User profiles and transaction history.
 
