@@ -7,7 +7,7 @@ BlockBazzar is an online crypto NFT marketplace built using Truffle, npm, and Re
 1. [Features](#features)
 2. [Prerequisites](#prerequisites)
 3. [Installation](#installation)
-4. [MetaMask](#metamask)
+4. [MetaMask](#MetaMask)
 5. [Usage](#usage)
 6. [License](#license)
 
