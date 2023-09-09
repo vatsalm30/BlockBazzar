@@ -92,4 +92,4 @@ Before you begin, ensure you have met the following requirements:
 
 ## License
 
-This project is under an All Rights Reserved Liscence. See the License file for details.
+This project is under an All Rights Reserved Liscence. See the [License](https://github.com/vatsalm30/BlockBazzar/blob/main/LICENSE) file for details.
