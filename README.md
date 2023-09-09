@@ -55,7 +55,7 @@ Before you begin, ensure you have met the following requirements:
    npm start
 
 
-## Meta Mask
+## MetaMask
 
 
 1. Run Ganache local blockchauin on port 7545
