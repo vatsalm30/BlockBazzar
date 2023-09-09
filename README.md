@@ -7,8 +7,9 @@ BlockBazzar is an online crypto NFT marketplace built using Truffle, npm, and Re
 1. [Features](#features)
 2. [Prerequisites](#prerequisites)
 3. [Installation](#installation)
-4. [Usage](#usage)
-5. [License](#license)
+4. [MetaMask](#metamask)
+5. [Usage](#usage)
+6. [License](#license)
 
 ## Features
 
@@ -52,3 +53,22 @@ Before you begin, ensure you have met the following requirements:
    ```bash
    cd client
    npm start
+
+##MetaMask
+1. Run Ganache local blockchauin on port 7545
+   
+2. Instal Metamask and add Ganche to it
+   
+3. Steps to Add Ganache to MetaMask:
+   
+   
+## Usage
+
+   
+4. Access the BlockBazzar frontend at http://localhost:3000.
+
+5. Create an account and log in using your Ethereum wallet.
+
+6. Create your NFT collections and mint NFTs.
+
+7. Browse, buy, and sell NFTs securely on the platform.
