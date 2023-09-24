@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import {Navigate, useNavigate, useParams} from 'react-router-dom'
-import {getTokenURI, approve, listToken, getItemMinter, listingNum, getListingTokenId, listingPrice, listingStock, editListedToken, listingSearchTerms} from '../components/Web3Client'
+import {getTokenURI, approve, listToken, getItemMinter, listingNum, getListingTokenId, listingPrice, listingStock, editListedToken, listingSearchTerms, editProductToken} from '../components/Web3Client'
 import Web3 from "web3";
 import Decimal from 'decimal.js';
 import {NFTStorage} from 'nft.storage'
@@ -213,6 +213,14 @@ export const ProductPage = () => {
     navigate("/market/product/"+deployedListing);
   }
   
+  const EditProductToken = (tokenID, newURI) => {
+    editProductToken(tokenID, newURI).then(txn => {
+      console.log(txn)
+      navigate("/")
+      navigate("/product/"+id)
+    }).catch(err => console.log(err))
+  }
+
   function handelSubmit(e){
     e.preventDefault()
     approve(true).then(() => {
@@ -239,17 +247,23 @@ export const ProductPage = () => {
 
   function handelNameEdit(e) {
     e.preventDefault()
-    getListingTokenId(id).then(async listingToken => {
-      if(imageChanged){
-        fetch(image).then(async (img) => {
-          const res = await storeProduct(image, newName, newDescr, listingToken)
-          console.log(res)}
-          ``)
+    getListingTokenId(id).then(listingToken => {
+      if(!imageChanged){
+        fetch(image).then((response) => response.blob()).then((img) => {
+
+          storeProduct(img, newName, newDescr, Number(listingToken)).then(res => {
+            console.log(res.url)
+            EditProductToken(listingToken, res.url)
+          })
+          
+        })
 
       }
       else{
-        const res = await storeProduct(newImage, newName, newDescr, listingToken)
-        console.log(res)
+        storeProduct(newImage, newName, newDescr, Number(listingToken)).then(res => {
+          console.log(res.url)
+          EditProductToken(listingToken, res.url)
+        })
       }
     })
   }
