@@ -113,6 +113,10 @@ const ProfilePage = () => {
         navigate("/market");
     }
 
+    const OrdersPageRedurect = () => {
+      navigate("/profile/orders");
+  }
+
   return (
     <div>
         <h1>Profile</h1>
@@ -121,6 +125,7 @@ const ProfilePage = () => {
         <button onClick={()=>HomeRedirect()} className="cta-button">Home</button>
         <button onClick={()=>ListingRedirect()} className="cta-button">ListingPage</button>
         <button onClick={() => MarketPlaceRedirect()} className="cta-button">Market Place</button>
+        <button onClick={() => OrdersPageRedurect()} className="cta-button">Orders</button>
         <TitlebarImageList images={NFTImageData} onIMGClick="/product/"/>
     </div>
   )

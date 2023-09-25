@@ -146,8 +146,7 @@ const MarketProductPage = () => {
   const handelSubmit = (e) => {
     e.preventDefault()
     listingPrice(id).then((price) => {
-      console.log(amountToBuy)
-      buyToken(id, amountToBuy, price * window.BigInt(amountToBuy)).catch(error => {
+      buyToken(id, amountToBuy, window.Number(price)*window.Number(amountToBuy)).catch(error => {
         console.log(error)
       })
     })

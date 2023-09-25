@@ -84,10 +84,11 @@ export const NFTMint = () => {
         <form onSubmit={handelSubmit}>
         <input type="file" onChange={onGetImage} className='cta-file'/>
         <br></br>
-        {/* <label for="text" className="cta-label">Name</label> */}
+       <label className='cta-label'>Name: </label>
         <input type="text" onChange={onGetName} className='cta-text'/>
         <br></br>
         {/* <label for="text" className="cta-label">Description</label> */}
+        <label className='cta-label'>Description: </label>
         <input type="text" onChange={onGetDescr} className='cta-text'/>
         <br></br>
         <input type='Submit' value="Mint" className = "cta-button"/>
