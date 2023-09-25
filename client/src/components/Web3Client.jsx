@@ -1,97 +1,103 @@
-import {useState} from 'react'
-import {NFTStorage} from 'nft.storage'
-import {mintItems, getTokenCounter} from './Web3Client'
-import { useNavigate } from 'react-router-dom'
+import Web3 from "web3";
+import SaleTokenContract from "../contracts/SaleTokens.json"
+import MarketContract from "../contracts/Market.json"
 
-export const NFTMint = () => {
 
-    const navigate = useNavigate()
+let selectedAccount;
+let SaleTokenAddress;
+let SaleToken;
+let Market;
+let MarketAddress;
+export const init = async () => {
+    let provider = window.ethereum;
 
-    const [nftImage, setNFTImage] = useState(new Blob())
-    const [nftName, setNFTName] = useState("")
-    const [nftDescr, setNFTDescr] = useState("")
+    if(typeof provider !== 'undefined'){
+      //metamask is installed
 
-    const NFT_STORAGE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweEYyODM3YUM2MjJDYTk1NTBEQzBmODM0MWE5OGZGNkIzQUYwMWM3ODMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NTAwOTUzNTI0MywibmFtZSI6IlZhbWF6b24gSXBmcyBlbmNvZGluZyJ9.ry07HwNtVi4ciXthBL9HZgcr1kLaRy7PesrRfLeS0BI"
-    async function storeNFT(_image, _name, _description, _tokenId) {
-        // load the file from disk
-        // const image = await fileFromPath(imagePath)
-    
-        // create a new NFTStorage client using our API key
-        const nftstorage = new NFTStorage({ token: NFT_STORAGE_KEY })
-        
-        // call client.store, passing in the image & metadata
-
-        return nftstorage.store({
-          name: _name,
-          image: _image,
-          description: _description,
-          tokenId: _tokenId
-        }).then(nftIPFS => {
-            MintNFT(nftIPFS.url)
-            console.log(nftIPFS.url)
-            return nftIPFS;
-          })
-        .catch(error => console.error(error));
+      provider.request({method: "eth_requestAccounts"})
+      .then(accounts => {
+        selectedAccount = accounts[0]
+        // console.log(`Selected account is ${selectedAccount}`);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      window.ethereum.on('accountsChanged', function(accounts){
+        selectedAccount = accounts[0]
+        // console.log(`Selected changed to ${selectedAccount}`);
+      })
     }
 
-    const MintNFT = (nftURL) => {
-        mintItems((2n**256n) - 1n, nftURL).then(tx => {
-          console.log(tx)
-          getTokenCounter().then(tokenId => {
-            navigate("/product/"+tokenId)
-          })
-        }).catch(err => {console.log(err)})
-      }
+    const web3 = new Web3(provider);
 
-    async function handelSubmit(e){
-        e.preventDefault()
-        getTokenCounter().then(async (tokenId)=>{
-          const mintresult = await storeNFT(nftImage, nftName, nftDescr, Number(tokenId+window.BigInt(1)))
-          console.log(mintresult)
-    })
+    const networkId = await web3.eth.net.getId();
+    SaleTokenAddress = SaleTokenContract.networks[networkId].address
+    MarketAddress = MarketContract.networks[networkId].address
+    SaleToken = new web3.eth.Contract(SaleTokenContract.abi, SaleTokenAddress)
+    Market = new web3.eth.Contract(MarketContract.abi, MarketAddress)
+};
 
-    }
+export const mintItems = (itemNum, tokenURI) => {
+    return SaleToken.methods.mintItems(itemNum, tokenURI).send({ from: selectedAccount });
+}
 
-    function dataURItoBlob(dataURI) {
-        var byteString = atob(dataURI.split(',')[1]);
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
-          ia[i] = byteString.charCodeAt(i);
-        }
-        return new Blob([ab], { type: 'image/png' });
-      }
+export const editToken = (tokenNumber, tokenURI) => {
+  return SaleToken.methods.mintItems(tokenNumber, tokenURI).send({from: selectedAccount })
+}
 
-    const onGetImage = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile) {
-          var reader = new FileReader();
-          reader.onload = function(event) {
-              var imageBlob = dataURItoBlob(event.target.result);
-              setNFTImage(imageBlob);
-          };
-          reader.readAsDataURL(selectedFile);
-        }
-      }
-    const onGetName = (e) => {
-      setNFTName(e.target.value)
-    }
-    const onGetDescr = (e) => {
-      setNFTDescr(e.target.value)
-    }
-    return (
-    <div>
-        <form onSubmit={handelSubmit}>
-        <input type="file" onChange={onGetImage} className='cta-file'/>
-        <br></br>
-        {/* <label for="text" className="cta-label">Name</label> */}
-        <input type="text" onChange={onGetName} className='cta-text'/>
-        <br></br>
-        {/* <label for="text" className="cta-label">Description</label> */}
-        <input type="text" onChange={onGetDescr} className='cta-text'/>
-        <br></br>
-        <input type='Submit' value="Mint" className = "cta-button"/>
-        </form>
-    </div>
-    )
+export const approve = (doAllow) => {
+  return SaleToken.methods.setApprovalForAll(MarketAddress, doAllow).send({ from: selectedAccount });
+}
+export const getTokenURI = (tokenID) => {
+  return SaleToken.methods.uri(tokenID).call();
+}
+export const getTokenCounter = () => {
+    return SaleToken.methods.getLastTokenId().call();
+}
+export const getItemMinter = (tokenID) => {
+    return SaleToken.methods.getMinter(tokenID).call();
+}
+
+export const editProductToken = (tokenID, newURI) => {
+  return SaleToken.methods.editToken(tokenID, newURI).send({ from: selectedAccount });
+}
+
+export const listingNum = () =>{
+  return Market.methods.getNumOfListings().call();
+}
+
+export const listingPrice = (_listingId) =>{
+  return Market.methods.getTokenPrice(_listingId).call();
+}
+
+export const listingStock = (_listingId) =>{
+  return Market.methods.getTokenStock(_listingId).call();
+}
+
+export const listingSearchTerms = (_listingId) =>{
+  return Market.methods.getTokenSearchTerms(_listingId).call();
+}
+
+export const getListingTokenURI = (_listingId) =>{
+  return Market.methods.getListingTokenURI(_listingId).call();
+}
+
+export const getListingTokenId = (_listingId) =>{
+  return Market.methods.getTokenId(_listingId).call();
+}
+
+export const getListingTokenSeller = (_listingId) =>{
+  return Market.methods.getTokenSeller(_listingId).call();
+}
+
+export const listToken = (tokenID, price, stock, searchTerms) => {
+    return Market.methods.listEditProduct(tokenID, stock, price, SaleTokenAddress, searchTerms, 0).send({ from: selectedAccount });
+}
+
+export const editListedToken = (tokenID, price, stock, searchTerms, tokenToEdit) => {
+  return Market.methods.listEditProduct(tokenID, stock, price, SaleTokenAddress, searchTerms, tokenToEdit).send({ from: selectedAccount });
+}
+
+export const buyToken = (listingID, amountToBuy, amountToPay) => {
+  return Market.methods.buyProduct(listingID, amountToBuy).send({ from: selectedAccount, value: amountToPay });
 }

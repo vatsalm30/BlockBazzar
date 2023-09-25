@@ -7,8 +7,16 @@
     "start": "webpack serve"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/material": "^5.14.10",
+    "@mui/styled-engine": "^5.14.10",
+    "decimal.js": "^10.4.3",
+    "nft.storage": "^7.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.16.0",
     "web3": "^1.8.2"
   },
   "devDependencies": {

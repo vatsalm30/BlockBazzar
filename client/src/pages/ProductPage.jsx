@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Navigate, useNavigate, useParams} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 import {getTokenURI, approve, listToken, getItemMinter, listingNum, getListingTokenId, listingPrice, listingStock, editListedToken, listingSearchTerms, editProductToken} from '../components/Web3Client'
 import Web3 from "web3";
 import Decimal from 'decimal.js';
@@ -20,7 +20,7 @@ export const ProductPage = () => {
   const [deployedListing, setDeployedListing] = useState(0)
   const [newName, setNewName] = useState("")
   const [newDescr, setNewDescr] = useState("")
-  const [newImage, setNewImage] = useState(new Blob)
+  const [newImage, setNewImage] = useState(new Blob())
   const [imageChanged, setImageChanged] = useState(false)
 
 
@@ -62,7 +62,7 @@ export const ProductPage = () => {
           listingNum().then(numOfListings => {
             for(let i = 1; i <= numOfListings; i++){
               getListingTokenId(i).then(listingToken =>{
-                if(listingToken == id) {
+                if(listingToken === id) {
                   setDeployedListing(i)
                   listingPrice(i).then(res =>{
                     const priceNum = new Decimal(res.toString())
