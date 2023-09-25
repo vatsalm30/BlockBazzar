@@ -1,39 +1,96 @@
-# React Truffle Box
+# BlockBazzar - Online Crypto NFT Marketplace
 
-This box comes with everything you need to start using Truffle to write, compile, test, and deploy smart contracts, and interact with them from a React app.
+BlockBazzar is an online crypto NFT marketplace built using Truffle, npm, and React.js. This platform allows users to buy, and sell real products, with an underling ERC-1155 NFT system for safe and secure transactions
+
+## Table of Contents
+
+1. [Features](#features)
+2. [Prerequisites](#prerequisites)
+3. [Installation](#installation)
+4. [MetaMask](#MetaMask)
+5. [Usage](#usage)
+6. [License](#license)
+
+## Features
+
+- Create and manage Product lines.
+- Creat new Products.
+- Buy and sell Products securely.
+- User-friendly React.js frontend.
+- Integration with Blockchain technology using Truffle.
+- Secure authentication and authorization.
+- User profiles and transaction history.
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- Node.js and npm installed.
+- Truffle framework installed globally.
+- A running Ethereum node or a service like Infura.
+- A compatible Ethereum wallet (e.g., MetaMask) with test ETH.
+- Git for cloning the repository.
 
 ## Installation
 
-First ensure you are in an empty directory.
+1. Clone the BlockBazzar repository to your local machine:
 
-Run the `unbox` command using 1 of 2 ways.
+   ```bash
+   git clone https://github.com/vatsalm30/BlockBazzar.git
+2. Navigate to the project directory:
+   ```bash
+   cd BlockBazzar
+3. Install the required npm packages for the frontend and the Truffle project:
+   ```bash
+   npm install
+   cd client
+   npm install
+4. Configure your Ethereum network and wallet settings in "truffle-config.js"
+5. Migrate the smart contracts to the Ethereum network:
+   ```bash
+   truffle migrate --network yourNetworkName
+6. Start the React.js development server:
+   ```bash
+   cd client
+   npm start
 
-```sh
-# Install Truffle globally and run `truffle unbox`
-$ npm install -g truffle
-$ truffle unbox react
-```
 
-```sh
-# Alternatively, run `truffle unbox` via npx
-$ npx truffle unbox react
-```
+## MetaMask
 
-Start the react dev server.
 
-```sh
-$ cd client
-$ npm start
-```
+1. Run Ganache local blockchauin on port 7545
+   
+2. Instal Metamask on Chrome
+   
+3. Go to drop down in upper left side corner
+   
+4. Enable test networks
 
-From there, follow the instructions on the hosted React app. It will walk you through using Truffle and Ganache to deploy the `SimpleStorage` contract, making calls to it, and sending transactions to change the contract's state.
+5. Scroll all the way down to add a network
 
-## FAQ
+6. Click on add a network manually
 
-- __How do I use this with Ganache (or any other network)?__
+7. Set Network Name to 'Ganache'
 
-  The Truffle project is set to deploy to Ganache by default. If you'd like to change this, it's as easy as modifying the Truffle config file! Check out [our documentation on adding network configurations](https://trufflesuite.com/docs/truffle/reference/configuration/#networks). From there, you can run `truffle migrate` pointed to another network, restart the React dev server, and see the change take place.
+8. Set RPC URL to 'HTTP://127.0.0.1:7545'
 
-- __Where can I find more resources?__
+9. Set chain id to '1337'
 
-  This Box is a sweet combo of [Truffle](https://trufflesuite.com) and [Webpack](https://webpack.js.org). Either one would be a great place to start!
+10. Set currencey symbol to 'ETH'
+
+   
+## Usage
+
+   
+1. Access the BlockBazzar frontend at http://localhost:3000.
+
+2. Create an account and log in using your Ethereum wallet.
+
+3. Create your NFT collections and mint NFTs.
+
+4. Browse, buy, and sell NFTs securely on the platform.
+
+
+## License
+
+This project is under an All Rights Reserved Liscence. See the [License](https://github.com/vatsalm30/BlockBazzar/blob/main/LICENSE) file for details.
