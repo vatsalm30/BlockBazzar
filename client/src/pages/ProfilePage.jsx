@@ -9,27 +9,9 @@ const ProfilePage = () => {
     const [account, setAccount] = useState()
     const [balance, setBalance] = useState()
     const [NFTImageData, setNFTImageData] = useState([]);
-    const [loadSite, setLoadSite] = useState(false);
     const tokensArray = []
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const onPageLoad = () => {
-          setLoadSite(true);
-        };
-    
-        // Check if the page has already loaded
-        if (document.readyState === 'complete') {
-          onPageLoad();
-        } else {
-          window.addEventListener('load', onPageLoad);
-          // Remove the event listener when component unmounts
-          return () => window.removeEventListener('load', onPageLoad);
-        }
-      }, []);
-
-
     useEffect(() => {
         if (typeof window.ethereum !== 'undefined') {
           // Request the user's accounts from MetaMask
@@ -37,7 +19,6 @@ const ProfilePage = () => {
           window.ethereum.request({ method: 'eth_accounts' })
             .then(async (result) => {
               setAccount(result[0]);
-              if(loadSite){
                 try{
                     getTokenCounter().then((tokenID) =>{
                         loopOverTokens(tokenID, result[0])
@@ -46,7 +27,6 @@ const ProfilePage = () => {
                     catch (err){
                         navigate("/profile")
                     }
-              }
               
               const weiBalance = await web3.eth.getBalance(result[0]);
               const ethBalance = web3.utils.fromWei(weiBalance, 'ether');    
@@ -63,7 +43,8 @@ const ProfilePage = () => {
       useEffect(()=>{
         if(typeof window.ethereum != "undefined"){
             window.ethereum.on('accountsChanged', function(){
-                // navigate("/")
+                navigate("/")
+                setNFTImageData([])
                 navigate("/profile")
               })
         }

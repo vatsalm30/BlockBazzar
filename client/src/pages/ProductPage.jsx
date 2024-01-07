@@ -12,7 +12,6 @@ export const ProductPage = () => {
   const [image, setImage] = useState()
   const [name, setName] = useState("")
   const [descr, setDescr] = useState("")
-  const [loadSite, setLoadSite] = useState(false)
   const [isMinter, setIsMinter] = useState(false)
   const[price, setPrice] = useState(window.BigInt(0))
   const[stock, setStock] = useState(0)
@@ -26,65 +25,34 @@ export const ProductPage = () => {
 
   const NFT_STORAGE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweEYyODM3YUM2MjJDYTk1NTBEQzBmODM0MWE5OGZGNkIzQUYwMWM3ODMiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3NTAwOTUzNTI0MywibmFtZSI6IlZhbWF6b24gSXBmcyBlbmNvZGluZyJ9.ry07HwNtVi4ciXthBL9HZgcr1kLaRy7PesrRfLeS0BI";
 
-  useEffect(() => {
-    const onPageLoad = () => {
-      setLoadSite(true);
-    };
-
-    // Check if the page has already loaded
-    if (document.readyState === 'complete') {
-      onPageLoad();
-    } else {
-      window.addEventListener('load', onPageLoad);
-      // Remove the event listener when component unmounts
-      return () => window.removeEventListener('load', onPageLoad);
-    }
-  }, []);
-
-  // useEffect(()=>{
-  //   if(loadSite){
-  //     try{
-  //       fetchTokenURI(id)
-
-  //     }
-  //     catch (err){
-  //         navigate("/product/"+id)
-  //     }
-  //   }
-
-  //   })
-
 
     useEffect(() => {
-      if(loadSite){
-        try{
-          fetchTokenURI(id)
-          listingNum().then(numOfListings => {
-            for(let i = 1; i <= numOfListings; i++){
-              getListingTokenId(i).then(listingToken =>{
-                if(listingToken === id) {
-                  setDeployedListing(i)
-                  listingPrice(i).then(res =>{
-                    const priceNum = new Decimal(res.toString())
-                    const divisorNum = new Decimal(1e18)
-                    setPrice(priceNum.dividedBy(divisorNum))
-                  })
-                  listingStock(i).then(res =>{
-                    setStock(res)
-                  })
+      try{
+        fetchTokenURI(id)
+        listingNum().then(numOfListings => {
+          for(let i = 1; i <= numOfListings; i++){
+            getListingTokenId(i).then(listingToken =>{
+              if(listingToken === id) {
+                setDeployedListing(i)
+                listingPrice(i).then(res =>{
+                  const priceNum = new Decimal(res.toString())
+                  const divisorNum = new Decimal(1e18)
+                  setPrice(priceNum.dividedBy(divisorNum))
+                })
+                listingStock(i).then(res =>{
+                  setStock(res)
+                })
 
-                  listingSearchTerms(i).then(res =>{
-                    setInputs(res)
-                  })
-                }
-              })
-            }
-          })
-        setLoadSite(false)
-        }
-        catch (err){
-            navigate("/product/"+id)
-        }
+                listingSearchTerms(i).then(res =>{
+                  setInputs(res)
+                })
+              }
+            })
+          }
+        })
+      }
+      catch (err){
+          navigate("/product/"+id)
       }
 
       if (typeof window.ethereum !== 'undefined') {
@@ -92,7 +60,6 @@ export const ProductPage = () => {
         const web3 = new Web3(window.ethereum);
         window.ethereum.request({ method: 'eth_accounts' })
           .then(async (result) => {
-            if(loadSite){
               try{
                 getItemMinter(id).then(minter=>{
                   setIsMinter(window.BigInt(minter)==window.BigInt(result[0]))
@@ -105,7 +72,6 @@ export const ProductPage = () => {
                   catch (err){
                       navigate("/product/"+id)
                   }
-            }
           })
           .catch((error) => {
             console.error('Error retrieving accounts:', error);
@@ -122,16 +88,6 @@ export const ProductPage = () => {
         console.error('MetaMask is not installed');
       }
     });
-
-    // useEffect(()=>{
-    //   if(typeof window.ethereum != "undefined"){
-    //       window.ethereum.on('accountsChanged', function(){
-    //           navigate("/")
-    //           navigate("/product/"+id)
-    //         })
-    //   }
-    // })
-  
 
     const addInput = () => {
       setInputs([...inputs, '']);

@@ -1,17 +1,37 @@
 import React, {useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
-import {getListingTokenURI, getListingTokenSeller, getListingTokenId, buyToken, listingPrice, listingStock} from '../components/Web3Client'
+import {useNavigate} from 'react-router-dom'
+import {getTokenURI, getTokenCounter, getItemMinter, balanceOfFromAddress} from '../components/Web3Client';
 import TitlebarImageList from '../components/ImagePanel';
-import Web3 from "web3"
 
 export const OrdersPage = () => {
 
 
   const navigate = useNavigate()
-  const [loadSite, setLoadSite] = useState(false)
   const [account, setAccount] = useState(false)
-  // const [loadSite, setLoadSite] = useState(false)
+  const [NFTImageData, setNFTImageData] = useState([]);
+  const tokensArray = []
+  const [loadSite, setLoadSite] = useState(false);
 
+  useEffect(() => {
+    if(loadSite){
+      if (typeof window.ethereum !== 'undefined') {
+        // Request the user's accounts from MetaMask
+        window.ethereum.request({ method: 'eth_accounts' })
+          .then(async (result) => {
+            setAccount(result[0])
+            getTokenCounter().then(tokenCounter => {
+              loopOverTokens(tokenCounter)
+            })
+          })
+          .catch((error) => {
+            console.error('Error retrieving accounts:', error);
+          });
+      } else {
+        console.error('MetaMask is not installed');
+      }
+    }
+  });
+  
   useEffect(() => {
     const onPageLoad = () => {
       setLoadSite(true);
@@ -27,33 +47,47 @@ export const OrdersPage = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (typeof window.ethereum !== 'undefined') {
-      // Request the user's accounts from MetaMask
-      const web3 = new Web3(window.ethereum);
-      window.ethereum.request({ method: 'eth_accounts' })
-        .then(async (result) => {
-          setAccount(result[0]);
-          if(loadSite){
-            // token finding logic goes here
-          }
-        })
-        .catch((error) => {
-          console.error('Error retrieving accounts:', error);
-        });
-    } else {
-      console.error('MetaMask is not installed');
-    }
-  });
-  
   useEffect(()=>{
     if(typeof window.ethereum != "undefined"){
         window.ethereum.on('accountsChanged', function(){
-            navigate("/profile")
+            navigate("/profile/")
           })
     }
   })
 
+  const GetTokenURI = (tokenID) => {
+    return getTokenURI(tokenID)
+  }    
+
+  function fetchTokenURI(tokenID, done) {
+    GetTokenURI(parseInt(tokenID)).then(async CID => {
+        await fetch(CID.replace("ipfs://", "https://").replace("/metadata.json", ".ipfs.dweb.link/metadata.json")).then(async res => {
+            const json = await res.json()
+            tokensArray.push(json)
+            if(done){
+                setNFTImageData([...NFTImageData, ...tokensArray])
+            }
+            
+        })
+        }).catch(error => {
+        console.log(error)
+    });
+}
+
+async function loopOverTokens(tokenID){
+
+  for(let i = 1; i <= tokenID; i++) {
+    balanceOfFromAddress(account, i).then((balance) => {
+      getItemMinter(i).then(Owner => {
+        console.log(window.BigInt(account) != window.BigInt(Owner))
+        if(balance >= 1n && window.BigInt(account) != window.BigInt(Owner))
+        {
+          fetchTokenURI(i, NFTImageData.length == 0);
+        }
+      })
+    }).catch(error => {console.log(error)});
+    }
+  }
 
   const BackRedirect = () => {
     navigate("/profile");
@@ -63,6 +97,7 @@ export const OrdersPage = () => {
     <div>
       <header>
         <button onClick={() => BackRedirect()} className="cta-button">Back</button>
+        <TitlebarImageList images={NFTImageData} onIMGClick=""/>
       </header>
     </div>
   )

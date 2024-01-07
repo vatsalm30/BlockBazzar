@@ -10,6 +10,7 @@ import ProfilePage from "./pages/ProfilePage"
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ProductPage } from "./pages/ProductPage";
 import { OrdersPage } from "./pages/OrdersPage";
+// import Navbar  from "./components/Navbar";
 
 function App() {  
   useEffect(()=>{
@@ -20,6 +21,7 @@ function App() {
     <div>
     <BrowserRouter>
       <Routes>
+      {/* <Navbar/> */}
         <Route path="/" element={<HomePage/>}/>
         <Route path="/market" element={<MarketPlacePage/>}/>
         <Route path="/market/product/:id" element={<MarketProductPage/>}/>

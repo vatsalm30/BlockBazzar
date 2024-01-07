@@ -11,7 +11,6 @@ const MarketProductPage = () => {
   const [image, setImage] = useState(new Blob())
   const [name, setName] = useState("")
   const [descr, setDescr] = useState("")
-  const [loadSite, setLoadSite] = useState(false)
   const [isMinter, setIsMinter] = useState(false)
   const [tokenId, setTokenId] = useState(0)
   const [tokenStock, setTokenStock] = useState("")
@@ -19,36 +18,7 @@ const MarketProductPage = () => {
   const [amountToBuy, setAmountToBuy] = useState(0)
 
 
-  useEffect(() => {
-    const onPageLoad = () => {
-      setLoadSite(true);
-    };
-
-    // Check if the page has already loaded
-    if (document.readyState === 'complete') {
-      onPageLoad();
-    } else {
-      window.addEventListener('load', onPageLoad);
-      // Remove the event listener when component unmounts
-      return () => window.removeEventListener('load', onPageLoad);
-    }
-  }, []);
-
-//   useEffect(()=>{
-//     if(loadSite){
-//       try{
-//         fetchTokenURI(id)
-//         setTokenId(getListingTokenId(id))
-//       }
-//       catch (err){
-//           navigate("/market/product/"+id)
-//       }
-//     }
-//     })
-
-
     useEffect(() => {
-    if(loadSite){
         try{
             fetchTokenURI(id)
             getListingTokenId(id).then((tkId) => {
@@ -65,11 +35,9 @@ const MarketProductPage = () => {
               setTokenStock(stock.toString())
             })
 
-            setLoadSite(false)
         }
         catch (err){
             navigate("/market/product/"+id)
-        }
         }
     
       if (typeof window.ethereum !== 'undefined') {
@@ -77,7 +45,6 @@ const MarketProductPage = () => {
         const web3 = new Web3(window.ethereum);
         window.ethereum.request({ method: 'eth_accounts' })
           .then(async (result) => {
-            if(loadSite){
               try{
                 getListingTokenSeller(id).then(minter=>{
                   setIsMinter(window.BigInt(minter)==window.BigInt(result[0]))
@@ -86,7 +53,6 @@ const MarketProductPage = () => {
                   catch (err){
                       navigate("/market/product/"+id)
                   }
-            }
           })
           .catch((error) => {
             console.error('Error retrieving accounts:', error);
@@ -101,15 +67,6 @@ const MarketProductPage = () => {
         console.error('MetaMask is not installed');
       }
     });
-
-    // useEffect(()=>{
-    //   if(typeof window.ethereum != "undefined"){
-    //       window.ethereum.on('accountsChanged', function(){
-    //           navigate("/")
-    //           navigate("/product/"+id)
-    //         })
-    //   }
-    // })
   
   function fetchTokenURI(tokenID) {
         getListingTokenURI(parseInt(tokenID)).then(async CID => {

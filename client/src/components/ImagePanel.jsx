@@ -10,6 +10,8 @@ export default function TitlebarImageList({images, onIMGClick}) {
   const navigate = useNavigate()
 
   const onClickIMG = (tokenId) => {
+    if(onIMGClick === "" || onIMGClick === "/") return
+    console.log(tokenId)
     navigate(onIMGClick + tokenId)
   }
 

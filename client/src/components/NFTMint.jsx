@@ -46,8 +46,7 @@ export const NFTMint = () => {
     async function handelSubmit(e){
         e.preventDefault()
         getTokenCounter().then(async (tokenId)=>{
-          const mintresult = await storeNFT(nftImage, nftName, nftDescr, Number(tokenId+window.BigInt(1)))
-          console.log(mintresult)
+          const mintresult = await storeNFT(nftImage, nftName, nftDescr, Number(window.BigInt(tokenId)+window.BigInt(1)))
     })
 
     }
