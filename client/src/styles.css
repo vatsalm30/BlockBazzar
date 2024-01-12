@@ -27,6 +27,10 @@ body {
   transition: background-color 0.3s ease; /* Add a smooth transition effect */
 }
 
+
+.cta-text::placeholder {
+  color: #b3b3b3;
+}
 .cta-button {
   cursor: pointer;
   background: #5e7f7c; /* Soft teal color */

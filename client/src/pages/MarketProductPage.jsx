@@ -16,8 +16,9 @@ const MarketProductPage = () => {
   const [tokenStock, setTokenStock] = useState("")
   const [tokenPrice, setTokenPrice] = useState("")
   const [amountToBuy, setAmountToBuy] = useState(0)
-
-
+  const [reviews, setReviews] = useState()
+  const [account, setAccount] = useState()
+  const [userName, setUserName] = useState("")
     useEffect(() => {
         try{
             fetchTokenURI(id)
@@ -28,24 +29,24 @@ const MarketProductPage = () => {
               const priceNum = new Decimal(price.toString())
               const divisorNum = new Decimal(1e18)
               setTokenPrice((priceNum.dividedBy(divisorNum)).toString())
-              console.log((priceNum.dividedBy(divisorNum)).toString())
+              // console.log((priceNum.dividedBy(divisorNum)).toString())
             })
 
             listingStock(id).then(stock => {
               setTokenStock(stock.toString())
             })
-
+            
         }
         catch (err){
             navigate("/market/product/"+id)
         }
-    
       if (typeof window.ethereum !== 'undefined') {
         // Request the user's accounts from MetaMask
         const web3 = new Web3(window.ethereum);
         window.ethereum.request({ method: 'eth_accounts' })
           .then(async (result) => {
               try{
+                setAccount(result[0])
                 getListingTokenSeller(id).then(minter=>{
                   setIsMinter(window.BigInt(minter)==window.BigInt(result[0]))
                 })
@@ -67,7 +68,49 @@ const MarketProductPage = () => {
         console.error('MetaMask is not installed');
       }
     });
-  
+
+    useEffect(() => {
+      fetchReviews(parseInt(id));
+    }, []);
+
+    const fetchUserName = (_idAddress) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://localhost:8080/retriveUserData", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = async () => {
+          // console.log(xhr.responseText);
+          try{
+            const userData = JSON.parse(xhr.responseText);
+            setUserName(userData["username"]);
+          }
+          catch{
+          }
+        }
+      xhr.send(JSON.stringify({"_id": _idAddress}));
+    }
+
+    const fetchReviews = (_idTokenID) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://localhost:8080/retriveReviews", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = () => {
+          console.log(xhr.responseText);
+          try{
+            const userData = JSON.parse(xhr.responseText);
+            setReviews(userData)
+          }
+          catch{
+          }
+        }
+      xhr.send(JSON.stringify({"_id": _idTokenID}));
+    }
+
+    const leaveReview = async (e) => {
+      e.preventDefault();
+      await fetchUserName(account);
+      console.log(userName);
+    }
+
   function fetchTokenURI(tokenID) {
         getListingTokenURI(parseInt(tokenID)).then(async CID => {
           await fetch(CID.replace("ipfs://", "https://").replace("/metadata.json", ".ipfs.dweb.link/metadata.json")).then(async res => {
@@ -141,6 +184,32 @@ const MarketProductPage = () => {
       <button onClick={()=>ListingRedirect()} className="cta-button">ListingPage</button>
       <button onClick={() => ProfilePageRedirect()} className="cta-button">Profile</button>
       <button onClick={() => MarketPlaceRedirect()} className="cta-button">Market Place</button>
+      <br/>
+      <br/>
+      <h1>Leave A Review: </h1>
+      <form onSubmit={leaveReview}>
+        <label>Stars: </label>
+        <input type="number" className="cta-text"/>
+        <br/>
+        <label>Review: </label>
+        <input type="text" className="cta-text"/>
+        <br></br>
+        <input type='submit' value="Leave Review" className="cta-button"/>
+      </form>
+      <br/>
+      <br/>
+      <h1>Reviews: </h1>
+      <div>{reviews?  
+      reviews.map((review, key)=>{
+        return (
+          <div>
+            <h2>{review.username}</h2>
+            <p>{review.review}</p>
+          </div>
+        )
+      })
+      : "no reviews yet"
+      }</div>
     </div>
   )
 }

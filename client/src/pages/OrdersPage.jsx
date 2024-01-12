@@ -97,7 +97,7 @@ async function loopOverTokens(tokenID){
     <div>
       <header>
         <button onClick={() => BackRedirect()} className="cta-button">Back</button>
-        <TitlebarImageList images={NFTImageData} onIMGClick=""/>
+        <TitlebarImageList images={NFTImageData} onIMGClick="/market/product/"/>
       </header>
     </div>
   )
