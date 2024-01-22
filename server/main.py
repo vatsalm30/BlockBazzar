@@ -62,7 +62,14 @@ def retriveReviews():
 
 @app.route("/loadReview", methods=["POST", "GET"])
 def loadReview():
-    pass
+    reviewRecive = '' if not request.get_json(force=True) else request.get_json(force=True)
+
+    id = reviewRecive["_id"]
+    del reviewRecive["_id"]
+
+    listedProductsCollection.update_one({"_id": id}, {"$push": {"reviews": reviewRecive}})
+
+    return "Review Pushed Successfully"
 
 if __name__ == "__main__":
     app.run(debug=True, port=8080)

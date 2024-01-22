@@ -18,7 +18,7 @@ const MarketProductPage = () => {
   const [amountToBuy, setAmountToBuy] = useState(0)
   const [reviews, setReviews] = useState()
   const [account, setAccount] = useState()
-  const [userName, setUserName] = useState("")
+  const [reviewerNames, setReviewerNames] = useState([])
     useEffect(() => {
         try{
             fetchTokenURI(id)
@@ -71,23 +71,8 @@ const MarketProductPage = () => {
 
     useEffect(() => {
       fetchReviews(parseInt(id));
+      loopOverReviews();
     }, []);
-
-    const fetchUserName = (_idAddress) => {
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "http://localhost:8080/retriveUserData", true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.onload = async () => {
-          // console.log(xhr.responseText);
-          try{
-            const userData = JSON.parse(xhr.responseText);
-            setUserName(userData["username"]);
-          }
-          catch{
-          }
-        }
-      xhr.send(JSON.stringify({"_id": _idAddress}));
-    }
 
     const fetchReviews = (_idTokenID) => {
       var xhr = new XMLHttpRequest();
@@ -105,10 +90,44 @@ const MarketProductPage = () => {
       xhr.send(JSON.stringify({"_id": _idTokenID}));
     }
 
-    const leaveReview = async (e) => {
+
+    const fetchUsername = (_idAddress) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://localhost:8080/retriveUserData", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xhr.onload = () => {
+          console.log(xhr.responseText);
+          try{
+            const userData = JSON.parse(xhr.responseText);
+            setReviewerNames(...reviewerNames, userData["username"]);
+          }
+          catch{
+            //setReviewerNames(...reviewerNames, userData["username"]);
+          }
+        }
+      xhr.send(JSON.stringify({"_id": _idAddress}));
+    }
+    
+    const loopOverReviews = () => {
+      for (let i = 0; i < reviews.length; i++) {
+        fetchUsername(reviews[i]["reviewer_address"])
+      }
+    }
+
+    const uploadReview = (_idAddress, rating, review) => {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:8080/loadReview", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onload = () => {
+          console.log(xhr.responseText);
+        }
+        const date = new Date();
+        xhr.send(JSON.stringify({"_id": parseInt(id), "reviewer_address": account, "buy_price": 0, "likes": rating, "post_timestamp": date.getTime(), "review": review}));
+    }
+
+    const leaveReview = (e) => {
       e.preventDefault();
-      await fetchUserName(account);
-      console.log(userName);
+      uploadReview(account, e.target[0].value, e.target[1].value);
     }
 
   function fetchTokenURI(tokenID) {
@@ -143,13 +162,18 @@ const MarketProductPage = () => {
     setAmountToBuy(e.target.value)
   }
 
-  const handelSubmit = (e) => {
+  const handelSubmitBuy = (e) => {
     e.preventDefault()
     listingPrice(id).then((price) => {
       buyToken(id, amountToBuy, window.Number(price)*window.Number(amountToBuy)).catch(error => {
         console.log(error)
       })
     })
+  }
+
+  const c = (s) => {
+    console.log(s)
+    return s
   }
 
   return (
@@ -172,7 +196,7 @@ const MarketProductPage = () => {
         <form onSubmit={()=>navigate("/product/"+tokenId)}>
           <input type='submit' value="Edit or Mint More" className="cta-button"/>
         </form>):(
-            <form onSubmit={handelSubmit}>
+            <form onSubmit={handelSubmitBuy}>
               <label>Amount To Buy: </label>
               <input type="number" className="cta-text" onChange={changeAmountToBuy}/>
               <br></br>
@@ -203,7 +227,7 @@ const MarketProductPage = () => {
       reviews.map((review, key)=>{
         return (
           <div>
-            <h2>{review.username}</h2>
+            <h2>{reviewerNames[key]}</h2>
             <p>{review.review}</p>
           </div>
         )
@@ -211,7 +235,7 @@ const MarketProductPage = () => {
       : "no reviews yet"
       }</div>
     </div>
-  )
+  );
 }
 
 export default MarketProductPage

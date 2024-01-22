@@ -18,6 +18,7 @@ export const MarketPlacePage = () => {
             }).catch((error) => console.log(error))
             }
             catch (err){
+                console.log(err)
                 navigate("/market")
             }
         }
